@@ -1,10 +1,11 @@
-#ifndef CPL_CONVEX_POLYGON_H__
-#define CPL_CONVEX_POLYGON_H__
+#ifndef CONVEX_POLYGON_LIBRARY_CPL_CPL_HH__
+#define CONVEX_POLYGON_LIBRARY_CPL_CPL_HH__
 
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <exception>
 
 namespace cpl {
 template <typename T>
@@ -22,7 +23,9 @@ class Vector {
 
   Vector(T x, T y) : x_(x), y_(y) {}
   T& x() { return x_; }
+  T x() const { return x_; }
   T& y() { return y_; }
+  T y() const { return y_; }
 
   Vector<T> operator+(const Vector<T>& p) const {
     Vector ret;
@@ -156,6 +159,14 @@ class ConvexPolygon {
   using PointT = Vector<T>;
   using LineSegmentT = LineSegment<T>;
 
+  ConvexPolygon() {}
+
+  ConvexPolygon(const std::vector<Vector<T>>& pts) {
+    for (size_t i = 0; i < pts.size(); ++i) {
+      addPoint(pts[i]);
+    }
+  }
+
   void update() const {
     if (updated_) {
       return;
@@ -203,7 +214,7 @@ class ConvexPolygon {
       PointT ab = b - a;
       PointT am = pt - a;
 
-      if (ab.cross(am) < 1e-5) {
+      if (ab.cross(am) < 0) {
         ret = false;
         break;
       }
@@ -212,6 +223,12 @@ class ConvexPolygon {
   }
 
   void addPoint(const PointT& pt) {
+    for (auto iter = pts_.begin(); iter != pts_.end(); ++iter) {
+      double norm = (pt - *iter).norm();
+      if (norm < 1e-4) {
+        return;
+      }
+    }
     pts_.push_back(pt);
     updated_ = false;
   }
@@ -289,7 +306,7 @@ class ConvexPolygon {
       }
     } else if (op == ClipOperation::kUnion) {
       std::cerr << "kUnion has not been implemented." << std::endl;
-      return ret;
+      throw std::invalid_argument("kUnion has not been implemented.");
     }
   }
 
@@ -347,4 +364,5 @@ typedef LineSegment<float> LineSegmentF;
 typedef LineSegment<double> LineSegmentD;
 
 }  // namespace cpl
-#endif
+
+#endif // CONVEX_POLYGON_LIBRARY_CPL_CPL_HH__

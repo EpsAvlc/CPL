@@ -1,4 +1,4 @@
-#include "cpl/convex_polygon.hh"
+#include "cpl/core.hh"
 
 #include <gtest/gtest.h>
 

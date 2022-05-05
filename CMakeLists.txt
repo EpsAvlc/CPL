@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.14.0)
 project(convex_polygon_library VERSION 0.1.0)
 
-set(UNIT_TEST True)
+set(BUILD_WITH_TEST True)
+set(BUILD_WITH_EXAMPLE True)
 
 set(CMAKE_CXX_STANDARD 11)
-if(UNIT_TEST)
+
+if (BUILD_WITH_EXAMPLE) 
+  find_package(OpenCV REQUIRED)
+endif()
+
+if(BUILD_WITH_TEST)
   enable_testing()
   include(FetchContent)
   FetchContent_Declare(
@@ -29,6 +35,15 @@ if(UNIT_TEST)
 
   include(GoogleTest)
   gtest_discover_tests(cpl_test)
-endif(UNIT_TEST)
+endif()
 
+if(BUILD_WITH_EXAMPLE)
+  add_executable(${PROJECT_NAME}_opencv_example
+    examples/opencv_example.cc
+  )
+
+  target_link_libraries(${PROJECT_NAME}_opencv_example
+    ${OpenCV_LIBS}
+  )
+endif()
 
