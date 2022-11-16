@@ -10,6 +10,10 @@ if (BUILD_WITH_EXAMPLE)
   find_package(OpenCV REQUIRED)
 endif()
 
+include_directories(
+  /usr/include/eigen3
+)
+
 if(BUILD_WITH_TEST)
   enable_testing()
   include(FetchContent)

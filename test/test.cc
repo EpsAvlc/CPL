@@ -49,7 +49,7 @@ TEST(ConvexPolygonTest, LineIntersect) {
   line1 << cpl::PointF(0, 0), cpl::PointF(100, 100);
   line2 << cpl::PointF(100, 0), cpl::PointF(0, 100);
   cpl::PointF inter_pt;
-  bool intersected = line1.intersect(line2, inter_pt);
+  bool intersected = line1.intersectWith(line2, inter_pt);
   EXPECT_TRUE(intersected);
   EXPECT_NEAR(inter_pt.x(), 50.f, 1e-5);
   EXPECT_NEAR(inter_pt.y(), 50.f, 1e-5);
@@ -58,10 +58,8 @@ TEST(ConvexPolygonTest, LineIntersect) {
   line2 << cpl::PointF(-100, -100), cpl::PointF(-100, 0);
   std::cout << line1.start() << ", " << line1.end() << std::endl;
   std::cout << line2.start() << ", " << line2.end() << std::endl;
-  ;
-  intersected = line1.intersect(line2, inter_pt);
+  intersected = line1.intersectWith(line2, inter_pt);
   std::cout << inter_pt << std::endl;
-  ;
   EXPECT_FALSE(intersected);
 }
 
@@ -73,7 +71,7 @@ TEST(ConvexPolygonTest, CPIntersect) {
   cpl::ConvexPolygonF cp2;
   cp2 << cpl::PointF(50, 50), cpl::PointF(150, 50), cpl::PointF(150, 150),
       cpl::PointF(50, 150);
-  
+
   cpl::ConvexPolygonF inter_cp = cp1.clip(cp2);
   std::cout << inter_cp << std::endl;
   std::cout << inter_cp << std::endl;
